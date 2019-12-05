@@ -3,6 +3,7 @@
 declare -i FCOUNT
 FCOUNT=0
 CHILDREN=
+TEMP=
 
 if [ "$#" -lt 2 ]; then
 	echo "There is not enought arguments, enter ./search.sh [where] [what]"
@@ -18,8 +19,9 @@ for item in $1/*; do
 	if [ -d "$item" ]; then
 		"$0" "$item" "$2" "$$" &
 		CHILDREN+=("$!")
-	elif [ -f "$item" ]; then
-		if [ $(basename $item) == "$2" ]; then
+	elif [ -f "$item" ] && [[ "$item" != *.LNK ]] && [[ "$item" != *.DeskLink ]] && [[ "$item" != *.ZFSendToTarget ]]; then
+		TEMP=$(basename -- $item)
+		if [ "$TEMP"  == "$2" ]; then
 			echo "There is '$2' in directory '$1'"
 			FCOUNT=$((FCOUNT+1))
 		fi
